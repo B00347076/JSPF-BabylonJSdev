@@ -1,2 +1,2 @@
 # Coding Notes
-This
+Just setting this up
