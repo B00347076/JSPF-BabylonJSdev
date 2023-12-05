@@ -1,5 +1,6 @@
-//-----------------------------------------------------
-//TOP OF CODE - IMPORTING BABYLONJS
+//----------------------------------------------------------\\
+//-------------------IMPORTS  -  START----------------------\\
+//----------------------------------------------------------\\
 import setSceneIndex from "./index";
 import {
     Scene,
@@ -30,8 +31,15 @@ import {
     Sound
   } from "@babylonjs/core";
   import * as GUI from "@babylonjs/gui";
-  //----------------------------------------------------
+//----------------------------------------------------------\\
+//-------------------IMPORTS  -  END------------------------\\
+//----------------------------------------------------------\\
 
+//----------------------------------------------------------\\
+//-----------------FUNCTIONS  -  START----------------------\\
+//----------------------------------------------------------\\
+
+  //---------------------Create Button----------------------\\
   function createSceneButton(scene: Scene, name: string, index: string, x: string, y: string, advtex) {
     let button = GUI.Button.CreateSimpleButton(name, index);
         button.left = x;
@@ -55,11 +63,10 @@ import {
         advtex.addControl(button);
         return button;
  }
-
-  //----------------------------------------------------------------------------------------------
-  //Create Skybox
+ //-------------------------END----------------------------\\
+  
+  //---------------------Create SkyBox----------------------\\
   function createSkybox(scene: Scene) {
-    //Skybox
     const skybox = MeshBuilder.CreateBox("skyBox", {size:150}, scene);
 	  const skyboxMaterial = new StandardMaterial("skyBox", scene);
 	  skyboxMaterial.backFaceCulling = false;
@@ -70,6 +77,7 @@ import {
 	  skybox.material = skyboxMaterial;
     return skybox;
   }
+  //-------------------------END----------------------------\\
 
   function createAnyLight(scene: Scene, index: number, px: number, py: number, pz: number, colX: number, colY: number, colZ: number, mesh: Mesh) {
     // only spotlight, point and directional can cast shadows in BabylonJS
@@ -97,13 +105,17 @@ import {
         break;
     }
   }
- 
+  //-------------------------END----------------------------\\
+
+  //--------------------Create HemiLight--------------------\\
   function createHemiLight(scene: Scene) {
     const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
     light.intensity = 0.8;
     return light;
   }
-  
+  //-------------------------END----------------------------\\
+
+  //------------------------Camera--------------------------\\
   function createArcRotateCamera(scene: Scene) {
     let camAlpha = -Math.PI / 2,
       camBeta = Math.PI / 2.5,
@@ -120,10 +132,18 @@ import {
     camera.attachControl(true);
     return camera;
   }
-  //----------------------------------------------------------
+  //-------------------------END----------------------------\\
+
+//----------------------------------------------------------\\
+//-----------------FUNCTIONS  -  END------------------------\\
+//----------------------------------------------------------\\
   
-  //----------------------------------------------------------
-  //BOTTOM OF CODE - MAIN RENDERING AREA FOR YOUR SCENE
+
+//----------------------------------------------------------\\
+//-------------------RENDER  -  START-----------------------\\
+//----------------------------------------------------------\\
+
+    //--Element Types--\\
   export default function MenuScene(engine: Engine) {
     interface SceneData {
       scene: Scene;
@@ -135,15 +155,19 @@ import {
   
     let that: SceneData = { scene: new Scene(engine) };
     that.scene.debugLayer.show();
-    //----------------------------------------------------------
 
+    //--GUI--\\
     let advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI", true);
     let button1 = createSceneButton(that.scene, "but1", "Start Game", "0px", "-75px", advancedTexture);
 
+    //--Environment--\\
     that.skybox = createSkybox(that.scene);
-    //Scene Lighting & Camera
+
+    //--Lighting & Camera--\\
     that.hemisphericLight = createHemiLight(that.scene);
     that.camera = createArcRotateCamera(that.scene);
     return that;
   }
-  //----------------------------------------------------
+//----------------------------------------------------------\\
+//-------------------RENDER  -  END-------------------------\\
+//----------------------------------------------------------\\

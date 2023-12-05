@@ -130,7 +130,6 @@ import {
         }
       });
 
-      //--Collision Action--\\
       item = mesh;
       let playerAggregate = new PhysicsAggregate(item, PhysicsShapeType.CAPSULE, { mass: 0 }, scene);
       playerAggregate.body.disablePreStep = false;

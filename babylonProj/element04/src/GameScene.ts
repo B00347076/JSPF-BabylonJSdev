@@ -55,7 +55,7 @@ import setSceneIndex from ".";
 //----------------------------------------------------------\\
 //-----------------FUNCTIONS  -  START----------------------\\
 //----------------------------------------------------------\\
-
+  
   let keyDownMap: any[] = [];
   let currentSpeed: number = 0.1;
   let walkingSpeed: number = 0.1;
@@ -132,7 +132,6 @@ import setSceneIndex from ".";
         }
       });
 
-      //--Collision Action--\\
       item = mesh;
       let playerAggregate = new PhysicsAggregate(item, PhysicsShapeType.CAPSULE, { mass: 0 }, scene);
       playerAggregate.body.disablePreStep = false;
@@ -216,12 +215,12 @@ import setSceneIndex from ".";
   function createAnyLight(scene: Scene, index: number, px: number, py: number, pz: number, colX: number, colY: number, colZ: number, mesh: Mesh) {
     // only spotlight, point and directional can cast shadows in BabylonJS
     switch (index) {
-      case 1: //hemispheric light
+      case 1: //Hemisperic Light\\
         const hemiLight = new HemisphericLight("hemiLight", new Vector3(px, py, pz), scene);
         hemiLight.intensity = 0.1;
         return hemiLight;
         break;
-      case 2: //spot light
+      case 2: //Spot Light\\
         const spotLight = new SpotLight("spotLight", new Vector3(px, py, pz), new Vector3(0, -1, 0), Math.PI / 3, 10, scene);
         spotLight.diffuse = new Color3(colX, colY, colZ); //0.39, 0.44, 0.91
         let shadowGenerator = new ShadowGenerator(1024, spotLight);
@@ -229,7 +228,7 @@ import setSceneIndex from ".";
         shadowGenerator.useExponentialShadowMap = true;
         return spotLight;
         break;
-      case 3: //point light
+      case 3: //Point Light\\
         const pointLight = new PointLight("pointLight", new Vector3(px, py, pz), scene);
         pointLight.diffuse = new Color3(colX, colY, colZ); //0.39, 0.44, 0.91
         shadowGenerator = new ShadowGenerator(1024, pointLight);
