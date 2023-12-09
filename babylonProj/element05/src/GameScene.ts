@@ -38,7 +38,7 @@ import {
   } 
   from "@babylonjs/core";
   import * as GUI from "@babylonjs/gui";
-import setSceneIndex from ".";
+  import setSceneIndex from ".";
   
   //-------------------Initialise Havok---------------------\\
   let initializedHavok;
@@ -428,43 +428,6 @@ import setSceneIndex from ".";
   }
   //-------------------------END----------------------------\\
 
-  //--------------------Create AnyLight---------------------\\
-  function createAnyLight(scene: Scene, index: number, px: number, py: number, pz: number, colX: number, colY: number, colZ: number, mesh: Mesh) {
-    switch (index) {
-      case 1: //--Hemispheric light--\\
-        const hemiLight = new HemisphericLight("hemiLight", new Vector3(px, py, pz), scene);
-        hemiLight.intensity = 0.5;
-        return hemiLight;
-        break;
-      case 2: //--Spot light--\\
-        const spotLight = new SpotLight("spotLight", new Vector3(px, py, pz), new Vector3(0, -1, 0), Math.PI / 3, 10, scene);
-        spotLight.diffuse = new Color3(colX, colY, colZ);
-        let shadowGenerator = new ShadowGenerator(1024, spotLight);
-        shadowGenerator.addShadowCaster(mesh);
-        shadowGenerator.useExponentialShadowMap = true;
-        spotLight.intensity = 1;
-        return spotLight;
-        break;
-      case 3: //--Point light--\\
-        const pointLight = new PointLight("pointLight", new Vector3(px, py, pz), scene);
-        pointLight.diffuse = new Color3(colX, colY, colZ);
-        shadowGenerator = new ShadowGenerator(1024, pointLight);
-        shadowGenerator.addShadowCaster(mesh);
-        shadowGenerator.useExponentialShadowMap = true;
-        return pointLight;
-        break;
-      case 4: //--Directional light--\\
-        const directLight = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 0), scene);
-        directLight.diffuse = new Color3(colX, colY, colZ);
-        shadowGenerator = new ShadowGenerator(1024, directLight);
-        shadowGenerator.addShadowCaster(mesh);
-        shadowGenerator.useExponentialShadowMap = true;
-      return directLight;
-      break;
-    }
-  }
-  //-------------------------END----------------------------\\
-
   //--------------------Create HemiLight--------------------\\
   function createDayLight(scene: Scene) {
     const day = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
@@ -504,7 +467,7 @@ import setSceneIndex from ".";
   }
   //-------------------------END----------------------------\\
 
-  //----------------------Point Light-----------------------\\
+  //--------------------Flood Lighting----------------------\\
   function createPointLight(scene: Scene, px: number, py: number, pz: number, mesh: Mesh, mesh2: Mesh, mesh3: Mesh, mesh4: Mesh, mesh5: Mesh, mesh6: Mesh, mesh7: Mesh, mesh8: Mesh, mesh9: Mesh, mesh10: Mesh, mesh11: Mesh, mesh12: Mesh, mesh13: Mesh, mesh14: Mesh, mesh15: Mesh) {
     const point = new PointLight("pointLight", new Vector3(px, py, pz), scene);
     point.intensity = 0.5;

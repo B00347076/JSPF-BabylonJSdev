@@ -36,7 +36,7 @@ import {
 //-------------------IMPORTS  -  END------------------------\\
 //----------------------------------------------------------\\
 
-  //---------------------Creat  Button----------------------\\
+  //---------------------Create  Button----------------------\\
   function createSceneButton(scene: Scene, name: string, index: string, x: string, y: string, advtex) {
     let button = GUI.Button.CreateSimpleButton(name, index);
       button.left = x;
@@ -75,7 +75,6 @@ import {
       game.fontSize ="140px";
       game.fontStyle ="bold";
           
-  
     const buttonClick = new Sound("MenuClickSFX", "./audio/menu-click.wav", scene, null, {
       loop: false,
       autoplay: false,
@@ -116,14 +115,7 @@ import {
       camBeta = Math.PI / 2.5,
       camDist = 10,
       camTarget = new Vector3(0, 0, 0);
-    let camera = new ArcRotateCamera(
-      "camera1",
-      camAlpha,
-      camBeta,
-      camDist,
-      camTarget,
-      scene,
-    );
+    let camera = new ArcRotateCamera("camera1", camAlpha, camBeta, camDist, camTarget, scene,);
     camera.checkCollisions = true;
     camera.collisionRadius = new Vector3(0.1, 0.1, 0.1);
     camera.attachControl(true);
@@ -134,7 +126,8 @@ import {
 //----------------------------------------------------------\\
 //-------------------RENDER  -  START-----------------------\\
 //----------------------------------------------------------\\
-  //--Imports--\\
+
+  //--Element Types--\\
   export default function MenuScene(engine: Engine) {
     interface SceneData {
       scene: Scene;
