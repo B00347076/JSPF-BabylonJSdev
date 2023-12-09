@@ -1,5 +1,6 @@
-//-----------------------------------------------------
-//TOP OF CODE - IMPORTING BABYLONJS
+//----------------------------------------------------------\\
+//-------------------IMPORTS  -  START----------------------\\
+//----------------------------------------------------------\\
 import setSceneIndex from "./index";
 import {
     Scene,
@@ -30,33 +31,37 @@ import {
     Sound
   } from "@babylonjs/core";
   import * as GUI from "@babylonjs/gui";
-  import HavokPhysics from "@babylonjs/havok";
-  import { HavokPlugin, PhysicsAggregate, PhysicsShapeType } from "@babylonjs/core";
-  //----------------------------------------------------
 
+//----------------------------------------------------------\\
+//-------------------IMPORTS  -  END------------------------\\
+//----------------------------------------------------------\\
+
+  //---------------------Creat  Button----------------------\\
   function createSceneButton(scene: Scene, name: string, index: string, x: string, y: string, advtex) {
     let button = GUI.Button.CreateSimpleButton(name, index);
-        button.left = x;
-        button.top = y;
-        button.width = "160px";
-        button.height = "60px";
-        button.color = "white";
-        button.cornerRadius = 20;
-        button.background = "green";
+      button.left = x;
+      button.top = y;
+      button.width = "160px";
+      button.height = "60px";
+      button.color = "white";
+      button.cornerRadius = 20;
+      button.background = "green";
 
-        const buttonClick = new Sound("MenuClickSFX", "./audio/whistle.wav", scene, null, {
-          loop: false,
-          autoplay: false,
-        });
+      const buttonClick = new Sound("MenuClickSFX", "./audio/whistle.wav", scene, null, {
+        loop: false,
+        autoplay: false,
+      });
 
-        button.onPointerUpObservable.add(function() {
-            console.log("THE BUTTON HAS BEEN CLICKED");
-            buttonClick.play();
-            setSceneIndex(1);
-        });
+      button.onPointerUpObservable.add(function() {
+        console.log("THE BUTTON HAS BEEN CLICKED");
+        buttonClick.play();
+        setSceneIndex(1);
+      });
         advtex.addControl(button);
         return button;
  }
+ //-------------------------END----------------------------\\
+
   //--------------------Game Title-----------------------\\
   function gameTitle(scene: Scene, name: string, index: string, x: string, y: string, advtex) {
     let game = GUI.Button.CreateSimpleButton(name, index);
@@ -66,7 +71,7 @@ import {
       game.height = "300px";
       game.color = "white";
       game.cornerRadius = 30;
-      game.background = "rgba(0, 0, 0, 0.3)";
+      game.background = "rgba(0, 0, 0, 0.5)";
       game.fontSize ="140px";
       game.fontStyle ="bold";
           
@@ -81,54 +86,31 @@ import {
   }
   //--------------------------END-----------------------------\\
 
-  //----------------------------------------------------------------------------------------------
-  //Create Skybox
+  //---------------------Create SkyBox----------------------\\
   function createSkybox(scene: Scene) {
-    //Skybox
-    const skybox = MeshBuilder.CreateBox("skyBox", {size:150}, scene);
+    const skybox = MeshBuilder.CreateBox("skyBox", {size:550}, scene);
 	  const skyboxMaterial = new StandardMaterial("skyBox", scene);
 	  skyboxMaterial.backFaceCulling = false;
-	  skyboxMaterial.reflectionTexture = new CubeTexture("textures/skybox", scene);
+	  skyboxMaterial.reflectionTexture = new CubeTexture("textures/grass", scene);
 	  skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
 	  skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
 	  skyboxMaterial.specularColor = new Color3(0, 0, 0);
+    skybox.infiniteDistance = true;
 	  skybox.material = skyboxMaterial;
+    skybox.position.y = -10;
     return skybox;
   }
+  //-------------------------END----------------------------\\
 
-  function createAnyLight(scene: Scene, index: number, px: number, py: number, pz: number, colX: number, colY: number, colZ: number, mesh: Mesh) {
-    // only spotlight, point and directional can cast shadows in BabylonJS
-    switch (index) {
-      case 1: //hemispheric light
-        const hemiLight = new HemisphericLight("hemiLight", new Vector3(px, py, pz), scene);
-        hemiLight.intensity = 0.1;
-        return hemiLight;
-        break;
-      case 2: //spot light
-        const spotLight = new SpotLight("spotLight", new Vector3(px, py, pz), new Vector3(0, -1, 0), Math.PI / 3, 10, scene);
-        spotLight.diffuse = new Color3(colX, colY, colZ); //0.39, 0.44, 0.91
-        let shadowGenerator = new ShadowGenerator(1024, spotLight);
-        shadowGenerator.addShadowCaster(mesh);
-        shadowGenerator.useExponentialShadowMap = true;
-        return spotLight;
-        break;
-      case 3: //point light
-        const pointLight = new PointLight("pointLight", new Vector3(px, py, pz), scene);
-        pointLight.diffuse = new Color3(colX, colY, colZ); //0.39, 0.44, 0.91
-        shadowGenerator = new ShadowGenerator(1024, pointLight);
-        shadowGenerator.addShadowCaster(mesh);
-        shadowGenerator.useExponentialShadowMap = true;
-        return pointLight;
-        break;
-    }
-  }
- 
+  //----------------------Hemi Light------------------------\\
   function createHemiLight(scene: Scene) {
     const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
     light.intensity = 0.8;
     return light;
   }
-  
+  //-------------------------END----------------------------\\
+
+  //------------------------Camera--------------------------\\
   function createArcRotateCamera(scene: Scene) {
     let camAlpha = -Math.PI / 2,
       camBeta = Math.PI / 2.5,
@@ -142,13 +124,17 @@ import {
       camTarget,
       scene,
     );
+    camera.checkCollisions = true;
+    camera.collisionRadius = new Vector3(0.1, 0.1, 0.1);
     camera.attachControl(true);
     return camera;
   }
-  //----------------------------------------------------------
+  //-------------------------END----------------------------\\
   
-  //----------------------------------------------------------
-  //BOTTOM OF CODE - MAIN RENDERING AREA FOR YOUR SCENE
+//----------------------------------------------------------\\
+//-------------------RENDER  -  START-----------------------\\
+//----------------------------------------------------------\\
+  //--Imports--\\
   export default function MenuScene(engine: Engine) {
     interface SceneData {
       scene: Scene;
@@ -160,16 +146,20 @@ import {
   
     let that: SceneData = { scene: new Scene(engine) };
     that.scene.debugLayer.show();
-    //----------------------------------------------------------
-
+    
+    //--GUI--\\
     let advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI", true);
     let button1 = createSceneButton(that.scene, "but1", "Start Game", "0px", "50px", advancedTexture);
     let game1 = gameTitle(that.scene, "but1", "FITBA '24", "0", "-20%", advancedTexture);
 
+    //--Environment--\\
     that.skybox = createSkybox(that.scene);
-    //Scene Lighting & Camera
+
+    //--Lighting & Camera--\\
     that.hemisphericLight = createHemiLight(that.scene);
     that.camera = createArcRotateCamera(that.scene);
     return that;
   }
-  //----------------------------------------------------
+//----------------------------------------------------------\\
+//-------------------RENDER  -  END-------------------------\\
+//----------------------------------------------------------\\
